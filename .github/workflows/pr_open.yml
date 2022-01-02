@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install Clever Cloud Cli
         run: |
-          curl https://clever-tools.cellar.services.clever-cloud.com/releases/latest/clever-tools-latest_linux.tar.gz
+          wget https://clever-tools.cellar.services.clever-cloud.com/releases/latest/clever-tools-latest_linux.tar.gz
           tar -xvf clever-tools-latest_linux.tar.gz
       - run: ./clever login --token ${CLEVER_TOKEN} --secret ${CLEVER_SECRET}
         env:
