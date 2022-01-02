@@ -20,4 +20,4 @@ jobs:
         env:
           CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
           CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
-      - run: clever deploy --alias pr-${{ github.event.number }} --force
+      - run: clever deploy --alias pr-${{ github.event.number }}

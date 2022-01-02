@@ -28,4 +28,4 @@ jobs:
       - run: clever env set CC_POST_BUILD_HOOK 'php artisan migrate --force' --alias pr-${{ github.event.number }}
       - run: clever env set APP_KEY 'base64:n/tcQ9ONifskhoZ9aLWnyYO0CHOBfsCXb+A9D8/kTzM=' --alias pr-${{ github.event.number }}
       - run: clever env set CC_PHP_VERSION '8' --alias pr-${{ github.event.number }}
-      - run: clever deploy --alias pr-${{ github.event.number }} --force
+      - run: clever deploy --alias pr-${{ github.event.number }}
