@@ -1,0 +1,26 @@
+name: Pull Request - Open
+on:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+jobs:
+  deploy:
+    name: 'Deploy Review App'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Clever Cloud Cli
+        run: |
+          curl https://clever-tools.cellar.services.clever-cloud.com/releases/latest/clever-tools-latest_linux.tar.gz > clever-tools-latest_linux.tar.gz
+          tar -xvf clever-tools-latest_linux.tar.gz
+      - run: ./clever login --token ${CLEVER_TOKEN} --secret ${CLEVER_SECRET}
+        env:
+          CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
+          CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
+      - run: ./clever create pr-${{ env.GITHUB_REF_SLUG }} -t php --region par --alias pr-${{ env.GITHUB_REF_SLUG }}
+      - run: ./clever domain add flemzord-pr-${{ env.GITHUB_REF_SLUG }}.cleverapps.io --alias pr-${{ env.GITHUB_REF_SLUG }} 
+      - run: ./clever addon create postgresql-addon pr-${{ env.GITHUB_REF_SLUG }}-pgsql --link pr-${{ env.GITHUB_REF_SLUG }} --region par 
+      - run: ./clever scale --flavor nano --alias pr-${{ env.GITHUB_REF_SLUG }}
+      - run: ./clever env set CC_WEBROOT '/public' --alias pr-${{ env.GITHUB_REF_SLUG }}
+      - run: ./clever env set CC_POST_BUILD_HOOK 'php artisan migrate --force' --alias pr-${{ env.GITHUB_REF_SLUG }}
+      - run: ./clever env set APP_KEY 'base64:n/tcQ9ONifskhoZ9aLWnyYO0CHOBfsCXb+A9D8/kTzM=' --alias pr-${{ env.GITHUB_REF_SLUG }}
+      - run: ./clever deploy
