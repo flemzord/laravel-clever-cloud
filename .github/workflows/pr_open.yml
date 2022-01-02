@@ -8,6 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install Clever Cloud Cli
         run: |
           wget https://clever-tools.cellar.services.clever-cloud.com/releases/latest/clever-tools-latest_linux.tar.gz
@@ -18,11 +20,11 @@ jobs:
         env:
           CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
           CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
-      - run: clever create pr-${{ github.sha }} -t php --region par --alias pr-${{ github.sha }}
-      - run: clever domain add flemzord-pr-${{ github.sha }}.cleverapps.io --alias pr-${{ github.sha }} 
-      - run: clever addon create postgresql-addon pr-${{ github.sha }}-pgsql --link pr-${{ github.sha }} --region par 
-      - run: clever scale --flavor nano --alias pr-${{ github.sha }}
-      - run: clever env set CC_WEBROOT '/public' --alias pr-${{ github.sha }}
-      - run: clever env set CC_POST_BUILD_HOOK 'php artisan migrate --force' --alias pr-${{ github.sha }}
-      - run: clever env set APP_KEY 'base64:n/tcQ9ONifskhoZ9aLWnyYO0CHOBfsCXb+A9D8/kTzM=' --alias pr-${{ github.sha }}
-      - run: clever deploy --alias pr-${{ github.sha }} --force
+      - run: clever create pr-${{ github.event.number }} -t php --region par --alias pr-${{ github.event.number }}
+      - run: clever domain add flemzord-pr-${{ github.event.number }}.cleverapps.io --alias pr-${{ github.event.number }} 
+      - run: clever addon create postgresql-addon pr-${{ github.event.number }}-pgsql --link pr-${{ github.event.number }} --region par 
+      - run: clever scale --flavor nano --alias pr-${{ github.event.number }}
+      - run: clever env set CC_WEBROOT '/public' --alias pr-${{ github.event.number }}
+      - run: clever env set CC_POST_BUILD_HOOK 'php artisan migrate --force' --alias pr-${{ github.event.number }}
+      - run: clever env set APP_KEY 'base64:n/tcQ9ONifskhoZ9aLWnyYO0CHOBfsCXb+A9D8/kTzM=' --alias pr-${{ github.event.number }}
+      - run: clever deploy --alias pr-${{ github.event.number }} --force
