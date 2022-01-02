@@ -19,4 +19,5 @@ jobs:
           CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
           CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
       - run: clever link pr-${{ github.event.number }}
+      - run: clever addon delete pr-${{ github.event.number }}-pgsql --yes
       - run: clever delete --yes
