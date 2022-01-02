@@ -1,0 +1,21 @@
+name: Pull Request - Close
+on:
+  pull_request:
+    types: [closed]
+jobs:
+  delete:
+    name: 'Delete Review App'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Clever Cloud Cli
+        run: |
+          wget https://clever-tools.cellar.services.clever-cloud.com/releases/latest/clever-tools-latest_linux.tar.gz
+          tar -xvf clever-tools-latest_linux.tar.gz
+          mv clever-tools-latest_linux/clever /usr/local/bin/clever
+          chmod +x /usr/local/bin/clever
+      - run: clever login --token ${CLEVER_TOKEN} --secret ${CLEVER_SECRET}
+        env:
+          CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
+          CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
+      - run: clever delete --yes --alias pr-${{ env.GITHUB_REF_SLUG }}
