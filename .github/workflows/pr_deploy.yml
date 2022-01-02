@@ -1,4 +1,4 @@
-name: Pull Request - Open
+name: Pull Request - Deploy
 on:
   pull_request:
     types: [assigned, synchronize]

@@ -18,4 +18,5 @@ jobs:
         env:
           CLEVER_TOKEN: ${{ secrets.CLEVER_TOKEN }}
           CLEVER_SECRET: ${{ secrets.CLEVER_SECRET }}
-      - run: clever delete --yes --alias pr-${{ github.event.number }}
+      - run: clever link pr-${{ github.event.number }}
+      - run: clever delete --yes
