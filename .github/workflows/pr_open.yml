@@ -30,3 +30,7 @@ jobs:
       - run: clever env set CC_PHP_VERSION '8' --alias pr-${{ github.event.number }}
       - run: sleep 60
       - run: clever deploy --alias pr-${{ github.event.number }}
+      - uses: JoseThen/comment-pr@v1.1.1
+        with:
+          comment: 'URL for review : https://flemzord-pr-${{ github.event.number }}.cleverapps.io'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
